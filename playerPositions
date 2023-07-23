@@ -1,0 +1,75 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+const int NUM_PLAYERS = 20;
+
+struct Player {
+    string name;
+    string position;
+    int score;
+    int int_max;
+    int int_low;
+};
+
+void readPlayerData(Player player_info[]) {
+    ifstream player_file;
+    int index = 0;
+    player_file.open("players.txt");
+
+    while (index < NUM_PLAYERS && !player_file.eof()) {
+        player_file >> player_info[index].name >> player_info[index].position >> player_info[index].score;
+        index++;
+    }
+    player_file.close();
+}
+
+int highestPlayerScore(Player player_info[], string position) {
+    int high_score = 0;
+    for (int index = 0; index < NUM_PLAYERS; index++) {
+        if (player_info[index].position == position && player_info[index].score > high_score) {
+            high_score = player_info[index].score;
+        }
+    }
+    return high_score;
+}
+
+int lowestPlayerScore(Player player_info[], string position) {
+    int low_score = 0;
+    for (int index = 0; index < NUM_PLAYERS; index++) {
+        if (player_info[index].position == position && player_info[index].score < low_score) {
+            low_score = index;
+            low_score = player_info[index].score;
+        }
+    }
+    return low_score;
+}
+
+int players_by_positions(Player player_info[], string position) {
+    int count = 0;
+    for (int index = 0; index < NUM_PLAYERS; index++) {
+        if (player_info[index].position == position) {
+            count++;
+        }
+    }
+    return count;
+}
+
+int main() {
+    Player player_info[NUM_PLAYERS];
+
+    readPlayerData(player_info);
+
+    int high_score = highestPlayerScore(player_info, "Quarterback");
+    cout << "The highest score for Quarterback is: " << high_score << endl;
+
+    int low_index = lowestPlayerScore(player_info, "RunningBack");
+    cout << "\nName: " << player_info[low_index].name << " Position: " << player_info[low_index].position
+         << " Score: " << player_info[low_index].score << endl;
+
+    cout << "The number of Quarterback players are: " << players_by_positions(player_info, "Quarterback") << endl;
+
+    return 0;
+}
